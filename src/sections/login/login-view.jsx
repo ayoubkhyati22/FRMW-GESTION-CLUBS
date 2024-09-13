@@ -18,7 +18,7 @@ import { bgGradient } from 'src/theme/css';
 
 import Iconify from 'src/components/iconify';
 import { Grid } from '@mui/material';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from 'src/firebase';
 import { setDoc, doc } from "firebase/firestore";
 import { toast } from 'react-toastify';
@@ -31,6 +31,10 @@ export default function LoginView() {
   //const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isRegister, setIsRegister] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [emailRegister, setEmailRegister] = useState("");
   const [passwordRegister, setPasswordRegister] = useState("");
@@ -40,21 +44,45 @@ export default function LoginView() {
   const [adresse, setAdresse] = useState(""); 
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isEnabledButton, setEnabledButton] = useState(false);
 
+
+  const handleSubmit = async (e) =>{
+    e.preventDefault();
+    setIsLoading(true);
+    try{
+      await signInWithEmailAndPassword(auth, email, password);
+      window.location.href ="/";
+      setIsLoading(false);     
+      toast.success("Bienvenu.");
+    }catch(error){
+      setIsLoading(false);
+      toast.error(error.message)
+    }
+  }
   const handleRegister = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     try{
       await createUserWithEmailAndPassword(auth,emailRegister,passwordRegister);
       const user = auth.currentUser;
+
+      await setDoc(doc(db,"Clubs",user.uid),{
+        name: name,
+        ville: ville,
+        adresse: adresse,
+      })
+
       if(user){
         await setDoc(doc(db, "Users", user.uid),{
           email:user.email,
           name: name,
-          ville: ville,
-          adresse: adresse,
-          telephone: telephone
+          telephone: telephone,
+          role: "Entraineur",
+          birthday: null,
+          grade: "black"
         });
+
         setIsLoading(false);     
         toast.success("Le club "+name+" a été enregistrer.");
       }    
@@ -67,13 +95,16 @@ export default function LoginView() {
 
   const renderForm = (
     <>
+    <form onSubmit={handleSubmit}>
       <Stack spacing={3}>
-        <TextField name="email" label="Adresse mail" />
+        <TextField name="email" label="Adresse mail" onChange={(e)=>setEmail(e.target.value)} required/>
 
         <TextField
           name="password"
           label="Mot de passe"
           type={showPassword ? 'text' : 'password'}
+          onChange={(e)=>setPassword(e.target.value)} 
+          required
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -102,6 +133,15 @@ export default function LoginView() {
       >
         Se connecter
       </LoadingButton>
+      <br />
+      <Box sx={{
+      display: 'flex',
+      justifyContent: 'center',
+    }}>
+      {isLoading && <span class="loader" ></span>}
+    </Box>
+
+    </form>
     </>
   );
 
@@ -196,22 +236,41 @@ export default function LoginView() {
             maxWidth: 560,
           }}
         >
-          <Typography variant="h4">Authentification (inscription)</Typography>
+          <Typography variant="h4">Authentification {isRegister ? '(inscription)' : ''}</Typography>
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
-          Vous n’avez pas de compte ?
-            <Link variant="subtitle2" sx={{ ml: 0.5 }}>
-              Demander
+            {isRegister ? (
+              <>
+               Vous avez déjà un compte ?
+              <Link
+              variant="subtitle2"
+              sx={{ ml: 0.5 }}
+              onClick={() => setIsRegister(!isRegister)} // Toggle form
+            >
+              Se connecter
             </Link>
+              </>
+            ) : (
+              <>
+                Vous n’avez pas de compte ?
+                <Link
+                  variant="subtitle2"
+                  sx={{ ml: 0.5 }}
+                  onClick={() => setIsRegister(!isRegister)} // Toggle form
+                >
+                  Demander
+                </Link>
+              </>
+            )}
           </Typography>
 
           <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Votre compte
+              {isRegister ? 'Inscription' : 'Votre compte'}
             </Typography>
           </Divider>
 
-          {renderFormRegister}
+          {isRegister ? renderFormRegister : renderForm}
         </Card>
       </Stack>
     </Box>
