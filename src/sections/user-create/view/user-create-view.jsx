@@ -12,10 +12,10 @@ export default function UserCreate() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Nouveau utilisateur</Typography>
+        <Typography variant="h4">Nouveau athlète</Typography>
       </Stack>
       <Card>
-        Création d`un nouveau utlisateur.
+        Création d`un nouveau athlète.
       </Card>
     </Container>
   );
