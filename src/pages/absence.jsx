@@ -1,0 +1,17 @@
+import { Helmet } from 'react-helmet-async';
+
+import { AbsenceView } from 'src/sections/absence/view';
+
+// ----------------------------------------------------------------------
+
+export default function AbsencePage() {
+  return (
+    <>
+      <Helmet>
+        <title> Morajaa | Absences </title>
+      </Helmet>
+
+      <AbsenceView />
+    </>
+  );
+}
