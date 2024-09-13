@@ -196,7 +196,7 @@ export default function LoginView() {
             maxWidth: 560,
           }}
         >
-          <Typography variant="h4">Authentification (inscription)</Typography>
+          <Typography variant="h4">Authentification (inscription abdilah)</Typography>
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
           Vous n’avez pas de compte ?
