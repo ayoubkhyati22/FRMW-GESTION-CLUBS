@@ -8,7 +8,7 @@ export default function UserCreatePage() {
   return (
     <>
       <Helmet>
-        <title> Morajaa | Nouveau Utulisateur </title>
+        <title> FRMWa | Nouveau Utulisateur </title>
       </Helmet>
 
       <UserCreate />

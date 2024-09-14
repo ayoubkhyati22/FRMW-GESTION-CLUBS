@@ -8,7 +8,7 @@ export default function AbsencePage() {
   return (
     <>
       <Helmet>
-        <title> Morajaa | Absences </title>
+        <title> FRMWa | Absences </title>
       </Helmet>
 
       <AbsenceView />

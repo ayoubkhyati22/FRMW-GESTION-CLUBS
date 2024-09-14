@@ -1,10 +1,9 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Drawer from '@mui/material/Drawer';
-// import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import { alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
@@ -23,14 +22,53 @@ import Scrollbar from 'src/components/scrollbar';
 import { NAV } from './config-layout';
 import navConfig from './config-navigation';
 
+import { auth, db } from "../../firebase";
+import { doc, getDoc } from 'firebase/firestore';
+
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
+
+  const [userDetails, setUserDetails] = useState(null);
+  const [clubName, setClubName] = useState("");
+
+  const fetchUserData = async () => {
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        // Fetch user details first
+        const docRef = doc(db, "Users", user.uid);
+        const docSnap = await getDoc(docRef);
+  
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setUserDetails(userData);
+  
+          // Now fetch club details after user details are available
+          if (userData.id_club) {
+            const docRefClub = doc(db, "Clubs", userData.id_club);
+            const docSnapClub = await getDoc(docRefClub);
+  
+            if (docSnapClub.exists()) {
+              setClubName(docSnapClub.data().name);
+            } else {
+              console.log("Erreur lors de la récupération du nom du club");
+            }
+          } else {
+            console.log("Aucun club associé à cet utilisateur");
+          }
+        } else {
+          console.log("Utilisateur non connecté");
+        }
+      }
+    });
+  };
+  
   const pathname = usePathname();
 
   const upLg = useResponsive('up', 'lg');
 
   useEffect(() => {
+    fetchUserData();
     if (openNav) {
       onCloseNav();
     }
@@ -39,40 +77,41 @@ export default function Nav({ openNav, onCloseNav }) {
 
   const renderAccount = (
     <Box
-  sx={{
-    my: 3,
-    mx: 2.5,
-    py: 2,
-    px: 2.5,
-    display: 'flex',
-    borderRadius: 1.5,
-    alignItems: 'flex-start', // Align items to the top
-    bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
-  }}
->
-  <Box
-    sx={{
-      display: 'flex',
-      flexDirection: 'column', // Stacks items vertically
-      justifyContent: 'space-between', // Distributes avatars evenly
-    }}
-  >
-    <Avatar src={account.photoURL} alt="photoURL" sx={{ mb: 1.5 }} /> {/* Aligns with account.displayName */}
-    <Avatar src={account.photoURL2} alt="photoURL" /> {/* Aligns with Abdelilah LAKRIM */}
-  </Box>
+      sx={{
+        my: 3,
+        mx: 2.5,
+        py: 2,
+        px: 2.5,
+        display: 'flex',
+        borderRadius: 1.5,
+        alignItems: 'flex-start', // Align items to the top
+        bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Avatar src={account.photoURL} alt="photoURL" sx={{ mb: 1.5 }} />
+        <Avatar src={account.photoURL2} alt="photoURL" />
+      </Box>
 
-  <Box sx={{ ml: 2 }}>
-    <Typography variant="subtitle2" sx={{ mt:1.5 }}> {/* Adds spacing between name and the next item */}
-      {account.displayName}
-    </Typography><br />
-    <Typography variant="body2" sx={{ mt: -1 }}> {/* Slightly raises this to align with the second avatar */}
-      Abdelilah LAKRIM
-    </Typography>
-    <Typography variant="body2" color="red" sx={{ mt: -0.5 }}> {/* Adjusts for better alignment */}
-      Entraineur
-    </Typography>
-  </Box>
-</Box>
+      <Box sx={{ ml: 2 }}>
+        <Typography variant="subtitle2" sx={{ mt: 1.5 }}>
+          {userDetails ? (clubName ? clubName : 'chargement...') : 'chargement...'}
+        </Typography><br />
+        <Typography variant="body2" sx={{ mt: -1 }}>
+          {userDetails ? (userDetails.nom + " " + userDetails.prenom ? userDetails.nom + " " + userDetails.prenom : 'chargement...') : 'chargement...'}
+        </Typography>
+        <Typography variant="body2" color="red" sx={{ mt: -0.5 }}>
+          {userDetails ? (userDetails.role ? userDetails.role : 'chargement...') : 'chargement...'}
+        </Typography>
+
+      </Box>
+    </Box>
 
   );
 
@@ -84,34 +123,6 @@ export default function Nav({ openNav, onCloseNav }) {
     </Stack>
   );
 
-  // const renderUpgrade = (
-  //   <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-  //     <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
-  //       <Box
-  //         component="img"
-  //         src="/assets/illustrations/illustration_avatar.png"
-  //         sx={{ width: 100, position: 'absolute', top: -50 }}
-  //       />
-
-  //       <Box sx={{ textAlign: 'center' }}>
-  //         <Typography variant="h6">Get more?</Typography>
-
-  //         <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
-  //           From only $69
-  //         </Typography>
-  //       </Box>
-
-  //       <Button
-  //         href="https://material-ui.com/store/items/minimal-dashboard/"
-  //         target="_blank"
-  //         variant="contained"
-  //         color="inherit"
-  //       >
-  //         Upgrade to Pro
-  //       </Button>
-  //     </Stack>
-  //   </Box>
-  // );
 
   const renderContent = (
     <Scrollbar
@@ -125,7 +136,7 @@ export default function Nav({ openNav, onCloseNav }) {
       }}
     >
 
-      <img src="public\assets\frmwLOGO.png" alt="" width='240px' style={{marginLeft:20, marginTop:20}} />
+      <img src="public\assets\frmwLOGO.png" alt="" width='240px' style={{ marginLeft: 20, marginTop: 20 }} />
       {/* <Logo sx={{ mt: 3, ml: 4 }} /> */}
 
       {renderAccount}

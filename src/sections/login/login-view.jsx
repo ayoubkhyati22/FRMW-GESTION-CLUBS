@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect  } from 'react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -11,24 +11,20 @@ import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
-
-//import { useRouter } from 'src/routes/hooks';
-
 import { bgGradient } from 'src/theme/css';
-
 import Iconify from 'src/components/iconify';
 import { Grid } from '@mui/material';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from 'src/firebase';
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc,addDoc, collection } from "firebase/firestore";
 import { toast } from 'react-toastify';
+import villesData from '../../utils/villes.json'
+
 
 // ----------------------------------------------------------------------
 
 export default function LoginView() {
   const theme = useTheme();
-
-  //const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
@@ -43,9 +39,19 @@ export default function LoginView() {
   const [telephone, setTelephone] = useState("");
   const [adresse, setAdresse] = useState(""); 
 
+  const [nom, setNom] = useState("");
+  const [prenom, setPrenom] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
   const [isEnabledButton, setEnabledButton] = useState(false);
 
+  const [villes, setVilles] = useState([]);
+  const [selectedVille, setSelectedVille] = useState("");
+
+  useEffect(() => {
+    setVilles(villesData.villes);
+    console.log(villesData.villes); 
+  }, []);
 
   const handleSubmit = async (e) =>{
     e.preventDefault();
@@ -63,35 +69,43 @@ export default function LoginView() {
   const handleRegister = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    try{
-      await createUserWithEmailAndPassword(auth,emailRegister,passwordRegister);
+    try {
+      // Créer un utilisateur avec email et mot de passe
+      await createUserWithEmailAndPassword(auth, emailRegister, passwordRegister);
       const user = auth.currentUser;
-
-      await setDoc(doc(db,"Clubs",user.uid),{
-        name: name,
-        ville: ville,
-        adresse: adresse,
-      })
-
-      if(user){
-        await setDoc(doc(db, "Users", user.uid),{
-          email:user.email,
+  
+      if (user) {
+        // Ajouter un club à Firestore sans spécifier d'ID (l'ID sera généré automatiquement)
+        const clubRef = await addDoc(collection(db, "Clubs"), {
           name: name,
+          ville: selectedVille,
+          adresse: adresse,
+        });
+  
+        // Récupérer l'ID du club ajouté
+        const clubId = clubRef.id;
+  
+        // Ajouter l'utilisateur avec le rôle d'entraîneur et associer l'ID du club
+        await setDoc(doc(db, "Users", user.uid), {
+          email: user.email,
+          nom: nom,
+          prenom: prenom,
           telephone: telephone,
           role: "Entraineur",
           birthday: null,
-          grade: "black"
+          grade: "black",
+          id_frmw: null,
+          id_club: clubId, // Associer l'ID du club ici
         });
-
-        setIsLoading(false);     
-        toast.success("Le club "+name+" a été enregistrer.");
-      }    
-    }catch(error){
+  
+        setIsLoading(false);
+        toast.success("Le club " + name + " a été enregistré.");
+      }
+    } catch (error) {
       setIsLoading(false);
-      setEnabledButton(true);
-      toast.error(error.message)
+      toast.error(error.message);
     }
-  }
+  };
 
   const renderForm = (
     <>
@@ -154,7 +168,25 @@ export default function LoginView() {
           <TextField fullWidth name="name" label="Nom du club" onChange={(e)=>setName(e.target.value)} required/>
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField fullWidth name="ville" label="Ville" onChange={(e)=>setVille(e.target.value)} required/>
+          <TextField
+            fullWidth
+            select
+            name="ville"
+            //label="Ville"
+            value={selectedVille}
+            onChange={(e) => setSelectedVille(e.target.value)}
+            SelectProps={{
+              native: true,
+            }}
+            required
+          >
+            <option value="">Sélectionnez une ville</option>
+            {villes.map((ville, index) => (
+              <option key={index} value={ville}>
+                {ville}
+              </option>
+            ))}
+          </TextField>
         </Grid>
         <Grid item xs={12} md={12}>
           <TextField fullWidth name="adresse" label="Adresse du club" onChange={(e)=>setAdresse(e.target.value)} required/>
@@ -165,10 +197,24 @@ export default function LoginView() {
   
         {/* Divider */}
         <Grid item xs={12}>
-          <Divider sx={{ my: 3 }} />
+        <Divider sx={{ my: 3 }}>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              {'Entraineur principale du club'}
+            </Typography>
+          </Divider>
         </Grid>
   
         {/* Right side fields */}
+        <Grid item xs={12} md={12}>
+          <TextField fullWidth name="id_frmw" label="Numéro de passeport sportif" onChange={(e)=>setNom(e.target.value)} required/>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField fullWidth name="nom" label="Nom de famille" onChange={(e)=>setNom(e.target.value)} required/>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField fullWidth name="prenom" label="Prénom" onChange={(e)=>setPrenom(e.target.value)} required/>
+        </Grid>
+
         <Grid item xs={12} md={6}>
           <TextField fullWidth name="email" label="Adresse mail" onChange={(e)=>setEmailRegister(e.target.value)} required/>
         </Grid>
@@ -223,7 +269,7 @@ export default function LoginView() {
           imgUrl: '/assets/background/overlay_4.jpg',
         }),
         height: 1,
-
+        
       }}
     >
       <img src="public\assets\frmwLOGO.png" alt="" width='240px' style={{marginLeft:20, marginTop:20}} />
@@ -234,6 +280,7 @@ export default function LoginView() {
             p: 5,
             width: 1,
             maxWidth: 560,
+            mt:-30
           }}
         >
           <Typography variant="h4">Authentification {isRegister ? '(inscription)' : ''}</Typography>

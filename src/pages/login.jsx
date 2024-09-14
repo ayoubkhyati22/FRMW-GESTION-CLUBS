@@ -8,7 +8,7 @@ export default function LoginPage() {
   return (
     <>
       <Helmet>
-        <title> Morajaa | Se connecter </title>
+        <title> FRMWa | Se connecter </title>
       </Helmet>
 
       <LoginView />
