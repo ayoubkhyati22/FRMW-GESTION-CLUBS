@@ -9,6 +9,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 
+import { auth } from "../../../firebase";
+
 import { account } from 'src/_mock/account';
 
 // ----------------------------------------------------------------------
@@ -40,6 +42,16 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(null);
   };
+
+  async function handleLogout() {
+    try {
+      await auth.signOut();
+      window.location.href = "/login";
+      console.log("User logged out successfully!");
+    } catch (error) {
+      console.error("Error logging out:", error.message);
+    }
+  }
 
   return (
     <>
@@ -105,7 +117,7 @@ export default function AccountPopover() {
         <MenuItem
           disableRipple
           disableTouchRipple
-          onClick={handleClose}
+          onClick={handleLogout}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
         >
           Logout

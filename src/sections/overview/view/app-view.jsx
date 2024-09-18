@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { faker } from '@faker-js/faker';
 
 import Container from '@mui/material/Container';
@@ -15,14 +16,42 @@ import AppWidgetSummary from '../app-widget-summary';
 import AppTrafficBySite from '../app-traffic-by-site';
 import AppCurrentSubject from '../app-current-subject';
 import AppConversionRates from '../app-conversion-rates';
+import { auth, db } from "../../../firebase";
+import { doc, getDoc } from 'firebase/firestore';
+
 
 // ----------------------------------------------------------------------
 
 export default function AppView() {
+  const [userDetails, setUserDetails] = useState(null);
+
+  const fetchUserData = async () => {
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        // Fetch user details first
+        const docRef = doc(db, "Users", user.uid);
+        const docSnap = await getDoc(docRef);
+  
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setUserDetails(userData);
+          console.log("------------------- "+userDetails);
+        } else {
+          console.log("Utilisateur non connecté");
+        }
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchUserData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Hi, Welcome back 👋
+      
+        Hi {userDetails ? (userDetails.prenom ? userDetails.prenom : 'chargement...') : 'chargement...'}, Welcome back 👋
       </Typography>
 
       <Grid container spacing={3}>
