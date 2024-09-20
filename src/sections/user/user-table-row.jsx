@@ -20,9 +20,9 @@ export default function UserTableRow({
   selected,
   name,
   avatarUrl,
+  dateNaissance,
   company,
   role,
-  isVerified,
   status,
   handleClick,
 }) {
@@ -36,6 +36,7 @@ export default function UserTableRow({
     setOpen(null);
   };
 
+  console.log("date: ",dateNaissance);
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -52,11 +53,13 @@ export default function UserTableRow({
           </Stack>
         </TableCell>
 
+        <TableCell>{dateNaissance}</TableCell>
+
         <TableCell>{company}</TableCell>
 
         <TableCell>{role}</TableCell>
 
-        <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell>
+        {/* <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell> */}
 
         <TableCell>
           <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
@@ -81,12 +84,12 @@ export default function UserTableRow({
       >
         <MenuItem onClick={handleCloseMenu}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
-          Edit
+          Modifier
         </MenuItem>
 
         <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
           <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-          Delete
+          Supprimer
         </MenuItem>
       </Popover>
     </>
@@ -96,8 +99,8 @@ export default function UserTableRow({
 UserTableRow.propTypes = {
   avatarUrl: PropTypes.any,
   company: PropTypes.any,
+  dateNaissance: PropTypes.any,
   handleClick: PropTypes.func,
-  isVerified: PropTypes.any,
   name: PropTypes.any,
   role: PropTypes.any,
   selected: PropTypes.any,

@@ -124,10 +124,10 @@ export default function UserPage() {
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'company', label: 'Company' },
+                  { id: 'name', label: 'Nom complet' },
+                  { id: 'dateNaissance', label: 'Date de naissance' },
+                  { id: 'company', label: 'Club' },
                   { id: 'role', label: 'Role' },
-                  { id: 'isVerified', label: 'Verified', align: 'center' },
                   { id: 'status', label: 'Status' },
                   { id: '' },
                 ]}
@@ -142,8 +142,8 @@ export default function UserPage() {
                       role={row.role}
                       status={row.status}
                       company={row.company}
+                      dateNaissance={row.dateNaissance}
                       avatarUrl={row.avatarUrl}
-                      isVerified={row.isVerified}
                       selected={selected.indexOf(row.name) !== -1}
                       handleClick={(event) => handleClick(event, row.name)}
                     />

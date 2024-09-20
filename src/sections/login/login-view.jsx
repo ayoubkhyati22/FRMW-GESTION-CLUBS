@@ -26,11 +26,13 @@ import villesData from '../../utils/villes.json'
 export default function LoginView() {
   const theme = useTheme();
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [isRegister, setIsRegister] = useState(false);
+
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [isRegister, setIsRegister] = useState(false);
 
   const [emailRegister, setEmailRegister] = useState("");
   const [passwordRegister, setPasswordRegister] = useState("");
