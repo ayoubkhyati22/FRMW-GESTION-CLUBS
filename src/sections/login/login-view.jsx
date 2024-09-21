@@ -95,7 +95,7 @@ export default function LoginView() {
           telephone: telephone,
           role: "Entraineur",
           birthday: null,
-          grade: "black",
+          grade: "Noir",
           id_frmw: null,
           id_club: clubId, // Associer l'ID du club ici
         });
