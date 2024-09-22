@@ -77,17 +77,17 @@ export default function LoginView() {
       const user = auth.currentUser;
   
       if (user) {
-        // Ajouter un club à Firestore sans spécifier d'ID (l'ID sera généré automatiquement)
+        // Ajouter un id_club à Firestore sans spécifier d'ID (l'ID sera généré automatiquement)
         const clubRef = await addDoc(collection(db, "Clubs"), {
           name: name,
           ville: selectedVille,
           adresse: adresse,
         });
   
-        // Récupérer l'ID du club ajouté
+        // Récupérer l'ID du id_club ajouté
         const clubId = clubRef.id;
   
-        // Ajouter l'utilisateur avec le rôle d'entraîneur et associer l'ID du club
+        // Ajouter l'utilisateur avec le rôle d'entraîneur et associer l'ID du id_club
         await setDoc(doc(db, "Users", user.uid), {
           email: user.email,
           nom: nom,
@@ -97,11 +97,11 @@ export default function LoginView() {
           birthday: null,
           grade: "Noir",
           id_frmw: null,
-          id_club: clubId, // Associer l'ID du club ici
+          id_club: clubId, // Associer l'ID du id_club ici
         });
   
         setIsLoading(false);
-        toast.success("Le club " + name + " a été enregistré.");
+        toast.success("Le id_club " + name + " a été enregistré.");
       }
     } catch (error) {
       setIsLoading(false);
@@ -167,7 +167,7 @@ export default function LoginView() {
       <Grid container spacing={3}>
         {/* Left side fields */}
         <Grid item xs={12} md={6}>
-          <TextField fullWidth name="name" label="Nom du club" onChange={(e)=>setName(e.target.value)} required/>
+          <TextField fullWidth name="name" label="Nom du id_club" onChange={(e)=>setName(e.target.value)} required/>
         </Grid>
         <Grid item xs={12} md={6}>
           <TextField
@@ -191,7 +191,7 @@ export default function LoginView() {
           </TextField>
         </Grid>
         <Grid item xs={12} md={12}>
-          <TextField fullWidth name="adresse" label="Adresse du club" onChange={(e)=>setAdresse(e.target.value)} required/>
+          <TextField fullWidth name="adresse" label="Adresse du id_club" onChange={(e)=>setAdresse(e.target.value)} required/>
         </Grid>
         <Grid item xs={12} md={12}>
           <TextField fullWidth name="telephone" label="Numéro de téléphone" onChange={(e)=>setTelephone(e.target.value)} required />
@@ -201,7 +201,7 @@ export default function LoginView() {
         <Grid item xs={12}>
         <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {'Entraineur principale du club'}
+              {'Entraineur principale du id_club'}
             </Typography>
           </Divider>
         </Grid>

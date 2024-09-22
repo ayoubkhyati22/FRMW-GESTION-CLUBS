@@ -43,7 +43,7 @@ export default function Nav({ openNav, onCloseNav }) {
           const userData = docSnap.data();
           setUserDetails(userData);
   
-          // Now fetch club details after user details are available
+          // Now fetch id_club details after user details are available
           if (userData.id_club) {
             const docRefClub = doc(db, "Clubs", userData.id_club);
             const docSnapClub = await getDoc(docRefClub);
@@ -51,10 +51,10 @@ export default function Nav({ openNav, onCloseNav }) {
             if (docSnapClub.exists()) {
               setClubName(docSnapClub.data().name);
             } else {
-              console.log("Erreur lors de la récupération du nom du club");
+              console.log("Erreur lors de la récupération du nom du id_club");
             }
           } else {
-            console.log("Aucun club associé à cet utilisateur");
+            console.log("Aucun id_club associé à cet utilisateur");
           }
         } else {
           console.log("Utilisateur non connecté");

@@ -85,7 +85,7 @@ export default function UserCreate() {
   
       if (user) {
   
-        // Ajouter l'utilisateur avec le rôle d'entraîneur et associer l'ID du club
+        // Ajouter l'utilisateur avec le rôle d'entraîneur et associer l'ID du id_club
         await setDoc(doc(db, "Users", user.uid), {
           email: user.email,
           nom: nom,
@@ -95,7 +95,7 @@ export default function UserCreate() {
           birthday: birthday,
           grade: selectedGrade,
           id_frmw: id_frmw,
-          id_club: "l21YFPOGO9vfVEqY1pR1", // Associer l'ID du club ici
+          id_club: "l21YFPOGO9vfVEqY1pR1", // Associer l'ID du id_club ici
         });
   
         setIsLoading(false);
@@ -138,7 +138,7 @@ export default function UserCreate() {
               <TextField fullWidth name="id_frmw" label="Numéro de passeport sportif" onChange={(e) => setId_Frmw(e.target.value)} required />
             </Grid>
             <Grid item xs={12} md={6}>
-              <TextField fullWidth name="dateNaissance" label="Date de naissance (jj/mm/yyyy)" onChange={(e) => setBirthday(e.target.value)} required />
+              <TextField fullWidth name="birthday" label="Date de naissance (jj/mm/yyyy)" onChange={(e) => setBirthday(e.target.value)} required />
             </Grid>
 
             <Grid item xs={12} md={6}>

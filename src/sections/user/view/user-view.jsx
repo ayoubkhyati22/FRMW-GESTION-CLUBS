@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { users } from 'src/_mock/user';
+// import { userss } from 'src/_mock/user';
 
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -21,10 +21,16 @@ import UserTableHead from '../user-table-head';
 import TableEmptyRows from '../table-empty-rows';
 import UserTableToolbar from '../user-table-toolbar';
 import { emptyRows, applyFilter, getComparator } from '../utils';
+import { db } from 'src/firebase';
+import { collection, doc, getDocs } from 'firebase/firestore';
 
 // ----------------------------------------------------------------------
 
 export default function UserPage() {
+
+  const [userss, setUserss] = useState([]);
+
+
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -47,7 +53,7 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
+      const newSelecteds = userss.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -87,12 +93,35 @@ export default function UserPage() {
   };
 
   const dataFiltered = applyFilter({
-    inputData: users,
+    inputData: userss,
     comparator: getComparator(order, orderBy),
     filterName,
   });
 
   const notFound = !dataFiltered.length && !!filterName;
+
+
+  const fetchUsers = async () => {
+    try {
+      const usersCollection = collection(db, 'Users');
+      const userSnapshot = await getDocs(usersCollection);
+      const userList = userSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setUserss(userList);
+    } catch (error) {
+      console.error("Error fetching userss:", error);
+      // Handle the error appropriately
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    console.log(userss);
+  }, []);
 
   return (
     <Container>
@@ -119,14 +148,14 @@ export default function UserPage() {
               <UserTableHead
                 order={order}
                 orderBy={orderBy}
-                rowCount={users.length}
+                rowCount={userss.length}
                 numSelected={selected.length}
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'name', label: 'Nom complet' },
-                  { id: 'dateNaissance', label: 'Date de naissance' },
-                  { id: 'company', label: 'Club' },
+                  { id: 'nom', label: 'Nom complet' },
+                  { id: 'birthday', label: 'Date de naissance' },
+                  { id: 'id_club', label: 'Club' },
                   { id: 'role', label: 'Role' },
                   { id: 'status', label: 'Status' },
                   { id: '' },
@@ -141,8 +170,8 @@ export default function UserPage() {
                       name={row.name}
                       role={row.role}
                       status={row.status}
-                      company={row.company}
-                      dateNaissance={row.dateNaissance}
+                      id_club={row.id_club}
+                      birthday={row.birthday}
                       avatarUrl={row.avatarUrl}
                       selected={selected.indexOf(row.name) !== -1}
                       handleClick={(event) => handleClick(event, row.name)}
@@ -151,7 +180,7 @@ export default function UserPage() {
 
                 <TableEmptyRows
                   height={77}
-                  emptyRows={emptyRows(page, rowsPerPage, users.length)}
+                  emptyRows={emptyRows(page, rowsPerPage, userss.length)}
                 />
 
                 {notFound && <TableNoData query={filterName} />}
@@ -163,7 +192,7 @@ export default function UserPage() {
         <TablePagination
           page={page}
           component="div"
-          count={users.length}
+          count={userss.length}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={[5, 10, 25]}

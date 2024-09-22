@@ -18,10 +18,10 @@ import Iconify from 'src/components/iconify';
 
 export default function UserTableRow({
   selected,
-  name,
+  nom,
   avatarUrl,
-  dateNaissance,
-  company,
+  birthday,
+  id_club,
   role,
   status,
   handleClick,
@@ -36,7 +36,7 @@ export default function UserTableRow({
     setOpen(null);
   };
 
-  console.log("date: ",dateNaissance);
+  console.log("date: ",birthday);
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -46,16 +46,16 @@ export default function UserTableRow({
 
         <TableCell component="th" scope="row" padding="none">
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl} />
+            <Avatar alt={nom} src={avatarUrl} />
             <Typography variant="subtitle2" noWrap>
-              {name}
+              {nom}
             </Typography>
           </Stack>
         </TableCell>
 
-        <TableCell>{dateNaissance}</TableCell>
+        <TableCell>{birthday}</TableCell>
 
-        <TableCell>{company}</TableCell>
+        <TableCell>{id_club}</TableCell>
 
         <TableCell>{role}</TableCell>
 
@@ -98,10 +98,10 @@ export default function UserTableRow({
 
 UserTableRow.propTypes = {
   avatarUrl: PropTypes.any,
-  company: PropTypes.any,
-  dateNaissance: PropTypes.any,
+  id_club: PropTypes.any,
+  birthday: PropTypes.any,
   handleClick: PropTypes.func,
-  name: PropTypes.any,
+  nom: PropTypes.any,
   role: PropTypes.any,
   selected: PropTypes.any,
   status: PropTypes.string,
