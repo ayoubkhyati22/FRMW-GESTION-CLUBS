@@ -37,7 +37,7 @@ export default function UserPage() {
 
   const [selected, setSelected] = useState([]);
 
-  const [orderBy, setOrderBy] = useState('name');
+  const [orderBy, setOrderBy] = useState('nom');
 
   const [filterName, setFilterName] = useState('');
 
@@ -53,18 +53,18 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = userss.map((n) => n.name);
+      const newSelecteds = userss.map((n) => n.nom);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, nom) => {
+    const selectedIndex = selected.indexOf(nom);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, nom);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -155,9 +155,10 @@ export default function UserPage() {
                 headLabel={[
                   { id: 'nom', label: 'Nom complet' },
                   { id: 'birthday', label: 'Date de naissance' },
-                  { id: 'id_club', label: 'Club' },
+                  { id: 'telephone', label: 'Téléphone' },      
                   { id: 'role', label: 'Role' },
-                  { id: 'status', label: 'Status' },
+                  { id: 'grade', label: 'Grade' },
+                  { id: 'membre', label: 'Membre' },
                   { id: '' },
                 ]}
               />
@@ -167,14 +168,17 @@ export default function UserPage() {
                   .map((row) => (
                     <UserTableRow
                       key={row.id}
-                      name={row.name}
+                      nom={row.nom}
+                      prenom={row.prenom}
+                      grade={row.grade}
                       role={row.role}
                       status={row.status}
-                      id_club={row.id_club}
+                      telephone={row.telephone}
+                      membre={row.membre}
                       birthday={row.birthday}
                       avatarUrl={row.avatarUrl}
-                      selected={selected.indexOf(row.name) !== -1}
-                      handleClick={(event) => handleClick(event, row.name)}
+                      selected={selected.indexOf(row.nom) !== -1}
+                      handleClick={(event) => handleClick(event, row.nom)}
                     />
                   ))}
 

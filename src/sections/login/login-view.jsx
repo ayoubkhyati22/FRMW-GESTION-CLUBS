@@ -94,6 +94,7 @@ export default function LoginView() {
           prenom: prenom,
           telephone: telephone,
           role: "Entraineur",
+          membre: "Actif",
           birthday: null,
           grade: "Noir",
           id_frmw: null,

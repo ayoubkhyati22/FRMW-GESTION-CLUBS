@@ -92,6 +92,7 @@ export default function UserCreate() {
           prenom: prenom,
           telephone: telephone,
           role: "Athlète",
+          membre: "Actif",
           birthday: birthday,
           grade: selectedGrade,
           id_frmw: id_frmw,

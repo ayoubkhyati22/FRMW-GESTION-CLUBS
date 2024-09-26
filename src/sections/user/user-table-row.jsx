@@ -19,10 +19,13 @@ import Iconify from 'src/components/iconify';
 export default function UserTableRow({
   selected,
   nom,
+  prenom,
+  grade,
   avatarUrl,
   birthday,
-  id_club,
+  telephone,
   role,
+  membre,
   status,
   handleClick,
 }) {
@@ -36,7 +39,7 @@ export default function UserTableRow({
     setOpen(null);
   };
 
-  console.log("date: ",birthday);
+  console.log("date: ", birthday);
   return (
     <>
       <TableRow hover tabIndex={-1} role="checkbox" selected={selected}>
@@ -48,21 +51,25 @@ export default function UserTableRow({
           <Stack direction="row" alignItems="center" spacing={2}>
             <Avatar alt={nom} src={avatarUrl} />
             <Typography variant="subtitle2" noWrap>
-              {nom}
+              {prenom}{' '}{nom}
             </Typography>
           </Stack>
         </TableCell>
 
         <TableCell>{birthday}</TableCell>
 
-        <TableCell>{id_club}</TableCell>
+        <TableCell>{telephone}</TableCell>
 
         <TableCell>{role}</TableCell>
+
+        <TableCell>
+          <div style={{ backgroundColor: grade, width: 50, height: 20, borderRadius: 4, boxShadow: 'rgba(0, 0, 0, 0.15) 0px 3px 3px 0px' }} ></div>
+        </TableCell>
 
         {/* <TableCell align="center">{isVerified ? 'Yes' : 'No'}</TableCell> */}
 
         <TableCell>
-          <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
+          <Label color={(membre === 'Partie' && 'error') || 'success'}>{membre}</Label>
         </TableCell>
 
         <TableCell align="right">
@@ -98,11 +105,14 @@ export default function UserTableRow({
 
 UserTableRow.propTypes = {
   avatarUrl: PropTypes.any,
-  id_club: PropTypes.any,
+  telephone: PropTypes.any,
   birthday: PropTypes.any,
   handleClick: PropTypes.func,
   nom: PropTypes.any,
+  prenom: PropTypes.any,
+  grade: PropTypes.any,
   role: PropTypes.any,
+  membre: PropTypes.any,
   selected: PropTypes.any,
   status: PropTypes.string,
 };
