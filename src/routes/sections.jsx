@@ -29,7 +29,13 @@ const ProtectedRoute = ({ children }) => {
   }, [auth]);
 
   if (loading) {
-    return <div>Chargement...</div>;
+    return <div style={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100%',
+      height: '100%', // Adjust this if you want a specific height
+    }}><span class="loader" ></span> <br /> Chargement</div>;
   }
 
   if (!user) {
@@ -45,7 +51,13 @@ export default function Router() {
       element: (
         <ProtectedRoute>
           <DashboardLayout>
-            <Suspense fallback={<div>Chargement...</div>}>
+            <Suspense fallback={<div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              height: '100%', // Adjust this if you want a specific height
+            }}><span class="loader" ></span> <br /> Chargement</div>}>
               <Outlet />
             </Suspense>
           </DashboardLayout>
@@ -56,7 +68,7 @@ export default function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'user-create', element: <UserCreate /> },
         { path: 'absence', element: <AbsencePage /> },
-      ],    
+      ],
     },
     {
       path: 'login',
