@@ -136,7 +136,7 @@ export default function Nav({ openNav, onCloseNav }) {
       }}
     >
 
-      <img src="dist\assets\frmwLOGO.png" alt="" width='240px' style={{ marginLeft: 20, marginTop: 20 }} />
+      <img src="assets\images\avatars\frmwLOGO.png" alt="" width='240px' style={{ marginLeft: 20, marginTop: 20 }} />
       {/* <Logo sx={{ mt: 3, ml: 4 }} /> */}
 
       {renderAccount}
