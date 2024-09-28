@@ -39,7 +39,7 @@ export default function LoginView() {
   const [name, setName] = useState("");
   const [ville, setVille] = useState("");
   const [telephone, setTelephone] = useState("");
-  const [adresse, setAdresse] = useState(""); 
+  const [adresse, setAdresse] = useState("");
 
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
@@ -60,7 +60,7 @@ export default function LoginView() {
     try{
       await signInWithEmailAndPassword(auth, email, password);
       window.location.href ="/";
-      setIsLoading(false);     
+      setIsLoading(false);
       toast.success("Bienvenu.");
     }catch(error){
       setIsLoading(false);
@@ -74,7 +74,7 @@ export default function LoginView() {
       // Créer un utilisateur avec email et mot de passe
       await createUserWithEmailAndPassword(auth, emailRegister, passwordRegister);
       const user = auth.currentUser;
-  
+
       if (user) {
         // Ajouter un id_club à Firestore sans spécifier d'ID (l'ID sera généré automatiquement)
         const clubRef = await addDoc(collection(db, "Clubs"), {
@@ -82,10 +82,10 @@ export default function LoginView() {
           ville: selectedVille,
           adresse: adresse,
         });
-  
+
         // Récupérer l'ID du id_club ajouté
         const clubId = clubRef.id;
-  
+
         // Ajouter l'utilisateur avec le rôle d'entraîneur et associer l'ID du id_club
         await setDoc(doc(db, "Users", user.uid), {
           email: user.email,
@@ -99,7 +99,7 @@ export default function LoginView() {
           id_frmw: null,
           id_club: clubId, // Associer l'ID du id_club ici
         });
-  
+
         setIsLoading(false);
         toast.success("Le id_club " + name + " a été enregistré.");
       }
@@ -119,7 +119,7 @@ export default function LoginView() {
           name="password"
           label="Mot de passe"
           type={showPassword ? 'text' : 'password'}
-          onChange={(e)=>setPassword(e.target.value)} 
+          onChange={(e)=>setPassword(e.target.value)}
           required
           InputProps={{
             endAdornment: (
@@ -190,22 +190,22 @@ export default function LoginView() {
             ))}
           </TextField>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <TextField fullWidth name="adresse" label="Adresse du id_club" onChange={(e)=>setAdresse(e.target.value)} required/>
+        <Grid item xs={12} md={12}>
+          <TextField fullWidth name="adresse" label="Adresse du club" onChange={(e)=>setAdresse(e.target.value)} required/>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={12}>
           <TextField fullWidth name="telephone" label="Numéro de téléphone" onChange={(e)=>setTelephone(e.target.value)} required />
         </Grid>
-  
+
         {/* Divider */}
-        {/* <Grid item xs={12}>
+        <Grid item xs={12}>
         <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {'Entraineur principale du id_club'}
+              {'Entraineur principale du club'}
             </Typography>
           </Divider>
-        </Grid> */}
-  
+        </Grid>
+
         {/* Right side fields */}
         <Grid item xs={12} md={12}>
           <TextField fullWidth name="id_frmw" label="Numéro de passeport sportif" onChange={(e)=>setNom(e.target.value)} required/>
@@ -240,7 +240,7 @@ export default function LoginView() {
           />
         </Grid>
       </Grid>
-      
+
   <br />
       <LoadingButton
         fullWidth
@@ -257,33 +257,44 @@ export default function LoginView() {
     }}>
       {isLoading && <span class="loader" ></span>}
     </Box>
-  
-      
+
+
   </form>
   );
-  
+
 
   return (
     <Box
-      sx={{
-        ...bgGradient({
-          color: alpha(theme.palette.background.default, 0.9),
-          imgUrl: '/assets/background/overlay_4.jpg',
-        }),
-        height: 1       
-      }}
+    sx={{
+      ...bgGradient({
+        color: alpha(theme.palette.background.default, 0.6),
+        imgUrl: '/assets/background/overlay_4.jpg',
+      }),
+      minHeight: '100vh', // Changed from height: 1 to minHeight: '100vh'
+      display: 'flex',
+      flexDirection: 'column',
+    }}
     >
-      <img src="/assets/images/avatars/frmwLOGO.png" alt="" width='240px' style={{marginLeft:20, marginTop:20}} />
+
+      {/* <img src="/assets/images/avatars/frmwLOGO.png" alt="" width='240px' style={{marginLeft:20, marginTop:20}} /> */}
 
       <Stack alignItems="center" justifyContent="center" sx={{ height:1 }}>
         <Card
           sx={{
             p: 5,
             width: 1,
-            maxWidth: 800,
-            mt:-10
+            maxWidth: 650,
+            mt:4
           }}
         >
+    <Box display="flex" justifyContent="center">
+      <img
+        src="/assets/images/avatars/frmwLOGO.png"
+        alt=""
+        style={{ width: '220px', maxWidth: '100%' }}
+      />
+    </Box>
+    <br />
           <Typography variant="h4">Authentification {isRegister ? '(inscription)' : ''}</Typography>
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
