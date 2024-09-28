@@ -1,0 +1,1 @@
+export { default as UserUpdate } from './user-update-view';

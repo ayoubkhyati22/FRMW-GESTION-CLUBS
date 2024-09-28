@@ -29,7 +29,6 @@ export default function UserCreate() {
   const [prenom, setPrenom] = useState("");
   const [birthday, setBirthday] = useState("");
 
-
   const [isLoading, setIsLoading] = useState(false);
   const [isEnabledButton, setEnabledButton] = useState(false);
 

@@ -168,6 +168,7 @@ export default function UserPage() {
                   .map((row) => (
                     <UserTableRow
                       key={row.id}
+                      id={row.id}
                       nom={row.nom}
                       prenom={row.prenom}
                       grade={row.grade}

@@ -13,11 +13,13 @@ import IconButton from '@mui/material/IconButton';
 
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
+import { Link } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({
   selected,
+  id,
   nom,
   prenom,
   grade,
@@ -91,7 +93,9 @@ export default function UserTableRow({
       >
         <MenuItem onClick={handleCloseMenu}>
           <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
+        <Link to={'/user-update/'+id}>
           Modifier
+        </Link>
         </MenuItem>
 
         <MenuItem onClick={handleCloseMenu} sx={{ color: 'error.main' }}>
@@ -105,6 +109,7 @@ export default function UserTableRow({
 
 UserTableRow.propTypes = {
   avatarUrl: PropTypes.any,
+  id: PropTypes.any,
   telephone: PropTypes.any,
   birthday: PropTypes.any,
   handleClick: PropTypes.func,
