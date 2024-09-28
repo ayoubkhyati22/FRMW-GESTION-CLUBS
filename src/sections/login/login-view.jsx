@@ -268,22 +268,22 @@ export default function LoginView() {
     <Box
       sx={{
         ...bgGradient({
-          color: alpha(theme.palette.background.default, 0.9),
+          color: alpha(theme.palette.background.default, 0.8),
           imgUrl: '/assets/background/overlay_4.jpg',
         }),
-        height: 1,
+        height: 1
         
       }}
     >
       <img src="/assets/images/avatars/frmwLOGO.png" alt="" width='240px' style={{marginLeft:20, marginTop:20}} />
 
-      <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
+      <Stack alignItems="center" justifyContent="center" sx={{ height:1 }}>
         <Card
           sx={{
             p: 5,
             width: 1,
             maxWidth: 560,
-            mt:-30
+            mt:-10
           }}
         >
           <Typography variant="h4">Authentification {isRegister ? '(inscription)' : ''}</Typography>
