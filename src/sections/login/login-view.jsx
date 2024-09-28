@@ -52,7 +52,6 @@ export default function LoginView() {
 
   useEffect(() => {
     setVilles(villesData.villes);
-    console.log(villesData.villes); 
   }, []);
 
   const handleSubmit = async (e) =>{
@@ -65,7 +64,7 @@ export default function LoginView() {
       toast.success("Bienvenu.");
     }catch(error){
       setIsLoading(false);
-      toast.error(error.message)
+      toast.error(error.message);
     }
   }
   const handleRegister = async (e) => {
@@ -191,21 +190,21 @@ export default function LoginView() {
             ))}
           </TextField>
         </Grid>
-        <Grid item xs={12} md={12}>
+        <Grid item xs={12} md={6}>
           <TextField fullWidth name="adresse" label="Adresse du id_club" onChange={(e)=>setAdresse(e.target.value)} required/>
         </Grid>
-        <Grid item xs={12} md={12}>
+        <Grid item xs={12} md={6}>
           <TextField fullWidth name="telephone" label="Numéro de téléphone" onChange={(e)=>setTelephone(e.target.value)} required />
         </Grid>
   
         {/* Divider */}
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
         <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               {'Entraineur principale du id_club'}
             </Typography>
           </Divider>
-        </Grid>
+        </Grid> */}
   
         {/* Right side fields */}
         <Grid item xs={12} md={12}>
@@ -268,11 +267,10 @@ export default function LoginView() {
     <Box
       sx={{
         ...bgGradient({
-          color: alpha(theme.palette.background.default, 0.8),
+          color: alpha(theme.palette.background.default, 0.9),
           imgUrl: '/assets/background/overlay_4.jpg',
         }),
-        height: 1
-        
+        height: 1       
       }}
     >
       <img src="/assets/images/avatars/frmwLOGO.png" alt="" width='240px' style={{marginLeft:20, marginTop:20}} />
@@ -282,7 +280,7 @@ export default function LoginView() {
           sx={{
             p: 5,
             width: 1,
-            maxWidth: 560,
+            maxWidth: 800,
             mt:-10
           }}
         >
