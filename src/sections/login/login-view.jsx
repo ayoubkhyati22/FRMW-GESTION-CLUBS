@@ -275,7 +275,7 @@ export default function LoginView() {
         
       }}
     >
-      <img src="/assets/images/avatars/LOGO_KSCT_2020-2.png" alt="" width='240px' style={{marginLeft:20, marginTop:20}} />
+      <img src="/assets/images/avatars/frmwLOGO.png" alt="" width='240px' style={{marginLeft:20, marginTop:20}} />
 
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
         <Card
