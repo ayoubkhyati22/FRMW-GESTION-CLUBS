@@ -108,7 +108,13 @@ export default function AbsenceView() {
   if (loading) {
     return (
       <Container>
-        <CircularProgress />
+        {/* <CircularProgress /> */}
+        <Box sx={{
+          display: 'flex',
+          justifyContent: 'center',
+        }}>
+          {<span class="loader" ></span>}
+        </Box>
       </Container>
     );
   }
@@ -119,9 +125,9 @@ export default function AbsenceView() {
         <Typography variant="h4">Gestion des présences/absences</Typography>
       </Stack>
       <Typography variant="h7" sx={{ textTransform: 'capitalize' }}>{formattedDate}</Typography>
-
+      <br /><br />
       <Card sx={{ p: 3 }}>
-        <Box sx={{  alignItems: 'center', mb: 2 }}>
+        <Box sx={{ alignItems: 'center', mb: 2 }}>
           <TextField
             label="Date"
             type="date"
@@ -147,9 +153,9 @@ export default function AbsenceView() {
                 px: 3,
               }}
             >
-              <Box sx={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
+              <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
                 flexGrow: 1,
                 mb: isMobile ? 2 : 0,
                 mr: isMobile ? 0 : 2
@@ -164,9 +170,9 @@ export default function AbsenceView() {
                   ◉ absences: null
                 </Typography>
               </Box>
-              
-              <Box sx={{ 
-                display: 'flex', 
+
+              <Box sx={{
+                display: 'flex',
                 width: isMobile ? '100%' : 'auto',
                 justifyContent: 'flex-end'
               }}>
