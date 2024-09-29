@@ -66,7 +66,7 @@ export default function AbsenceView() {
           // Initialize with all users present if no data exists for the date
           const initialAttendance = {};
           userList.forEach(user => {
-            initialAttendance[user.id] = 'Présent';
+            initialAttendance[user.id] = 'present';
           });
           setAttendance(initialAttendance);
         }
