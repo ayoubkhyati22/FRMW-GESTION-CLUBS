@@ -115,11 +115,13 @@ export default function AbsenceView() {
 
   return (
     <Container>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={1}>
         <Typography variant="h4">Gestion des présences/absences</Typography>
       </Stack>
+      <Typography variant="h7" sx={{ textTransform: 'capitalize' }}>{formattedDate}</Typography>
+
       <Card sx={{ p: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+        <Box sx={{  alignItems: 'center', mb: 2 }}>
           <TextField
             label="Date"
             type="date"
@@ -130,7 +132,7 @@ export default function AbsenceView() {
               shrink: true,
             }}
           />
-          <Typography variant="h7" sx={{ textTransform: 'capitalize' }}>{formattedDate}</Typography>
+          {/* <Typography variant="h7" sx={{ textTransform: 'capitalize' }}>{formattedDate}</Typography> */}
         </Box>
         <List>
           {users.map(user => (
