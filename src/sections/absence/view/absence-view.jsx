@@ -16,6 +16,8 @@ import { db } from 'src/firebase';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
+import { format, parse } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 const AttendanceButton = styled(Button)(({ theme, isSelected, colorWhenSelected }) => ({
   margin: theme.spacing(0, 1),
@@ -45,6 +47,8 @@ export default function AbsenceView() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { enqueueSnackbar } = useSnackbar();
+
+  const formattedDate = format(parse(date, 'yyyy-MM-dd', new Date()), 'EEEE dd MMMM yyyy', { locale: fr });
 
   useEffect(() => {
     const fetchUsersAndAttendance = async () => {
@@ -115,17 +119,19 @@ export default function AbsenceView() {
         <Typography variant="h4">Gestion des présences/absences</Typography>
       </Stack>
       <Card sx={{ p: 3 }}>
-        <TextField
-          label="Date"
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          sx={{ mb: 2 }}
-          fullWidth
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <TextField
+            label="Date"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            sx={{ mr: 2 }}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <Typography variant="h6" sx={{ textTransform: 'capitalize' }}>{formattedDate}</Typography>
+        </Box>
         <List>
           {users.map(user => (
             <ListItem 
