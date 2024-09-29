@@ -18,6 +18,7 @@ import { useTheme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import { format, parse } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { Avatar, Badge } from '@mui/material';
 
 const AttendanceButton = styled(Button)(({ theme, isSelected, colorWhenSelected }) => ({
   margin: theme.spacing(0, 1),
@@ -160,14 +161,20 @@ export default function AbsenceView() {
                 mb: isMobile ? 2 : 0,
                 mr: isMobile ? 0 : 2
               }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                  {`${user.prenom} ${user.nom}`}
-                </Typography>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Avatar alt={user.prenom} src={user.avatar} sx={{ mr: 2 }} />
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                    {`${user.prenom} ${user.nom}`}
+                  </Typography>
+                </div>
+
                 <Typography variant="body2" sx={{ mt: 0.5 }}>
-                  ◉ séance précédente: null
+                  ◉ séance précédente:  &nbsp;&nbsp;&nbsp;&nbsp; <Badge badgeContent={'Oui'} color="success">
+                  </Badge>
                 </Typography>
                 <Typography variant="body2">
-                  ◉ absences: null
+                  ◉ absences: &nbsp;&nbsp;&nbsp; <Badge badgeContent={10} color="warning">
+                  </Badge>
                 </Typography>
               </Box>
 
