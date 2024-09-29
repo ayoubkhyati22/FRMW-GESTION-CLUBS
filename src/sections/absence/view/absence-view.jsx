@@ -130,24 +130,44 @@ export default function AbsenceView() {
               shrink: true,
             }}
           />
-          <Typography variant="h6" sx={{ textTransform: 'capitalize' }}>{formattedDate}</Typography>
+          <Typography variant="h7" sx={{ textTransform: 'capitalize' }}>{formattedDate}</Typography>
         </Box>
         <List>
           {users.map(user => (
-            <ListItem 
-              key={user.id} 
-              divider 
-              sx={{ 
+            <ListItem
+              key={user.id}
+              divider
+              sx={{
+                display: 'flex',
                 flexDirection: isMobile ? 'column' : 'row',
                 alignItems: isMobile ? 'flex-start' : 'center',
-                py: isMobile ? 2 : 1
+                py: 2,
+                px: 3,
               }}
             >
-              <ListItemText 
-                primary={`${user.prenom} ${user.nom}`} 
-                sx={{ mb: isMobile ? 1 : 0 }}
-              />
-              <Box sx={{ display: 'flex', width: isMobile ? '100%' : 'auto' }}>
+              <Box sx={{ 
+                display: 'flex', 
+                flexDirection: 'column', 
+                flexGrow: 1,
+                mb: isMobile ? 2 : 0,
+                mr: isMobile ? 0 : 2
+              }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                  {`${user.prenom} ${user.nom}`}
+                </Typography>
+                <Typography variant="body2" sx={{ mt: 0.5 }}>
+                  ◉ séance précédente: null
+                </Typography>
+                <Typography variant="body2">
+                  ◉ absences: null
+                </Typography>
+              </Box>
+              
+              <Box sx={{ 
+                display: 'flex', 
+                width: isMobile ? '100%' : 'auto',
+                justifyContent: 'flex-end'
+              }}>
                 <AttendanceButton
                   variant="contained"
                   onClick={() => handleAttendanceChange(user.id, 'present')}
