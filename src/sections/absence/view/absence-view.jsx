@@ -9,11 +9,13 @@ import ListItemText from '@mui/material/ListItemText';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import { collection, getDocs, doc, setDoc } from 'firebase/firestore';
+import TextField from '@mui/material/TextField';
+import { collection, doc, getDoc, setDoc, getDocs } from 'firebase/firestore';
 import { styled } from '@mui/material/styles';
 import { db } from 'src/firebase';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { useSnackbar } from 'notistack';
 
 const AttendanceButton = styled(Button)(({ theme, isSelected, colorWhenSelected }) => ({
   margin: theme.spacing(0, 1),
@@ -37,13 +39,15 @@ const AttendanceButton = styled(Button)(({ theme, isSelected, colorWhenSelected 
 
 export default function AbsenceView() {
   const [users, setUsers] = useState([]);
-  const [attendance, setAttendance] = useState([]);
+  const [attendance, setAttendance] = useState({});
   const [loading, setLoading] = useState(true);
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchUsersAndAttendance = async () => {
       try {
         const usersCollection = collection(db, 'Users');
         const userSnapshot = await getDocs(usersCollection);
@@ -52,40 +56,48 @@ export default function AbsenceView() {
           ...doc.data()
         }));
         setUsers(userList);
-        setAttendance(userList.map(user => ({ id: user.id, status: null })));
+
+        // Fetch attendance for the selected date
+        const attendanceDoc = doc(db, 'Attendance', date);
+        const attendanceSnapshot = await getDoc(attendanceDoc);
+        if (attendanceSnapshot.exists()) {
+          setAttendance(attendanceSnapshot.data().users || {});
+        } else {
+          // Initialize with all users present if no data exists for the date
+          const initialAttendance = {};
+          userList.forEach(user => {
+            initialAttendance[user.id] = 'Présent';
+          });
+          setAttendance(initialAttendance);
+        }
+
         setLoading(false);
       } catch (error) {
-        console.error("Erreur lors de la récupération des utilisateurs:", error);
+        console.error("Erreur lors de la récupération des données:", error);
         setLoading(false);
+        enqueueSnackbar('Erreur lors de la récupération des données', { variant: 'error' });
       }
     };
 
-    fetchUsers();
-  }, []);
+    fetchUsersAndAttendance();
+  }, [date, enqueueSnackbar]);
 
   const handleAttendanceChange = (userId, newStatus) => {
-    setAttendance(prev =>
-      prev.map(item =>
-        item.id === userId
-          ? { ...item, status: item.status === newStatus ? null : newStatus }
-          : item
-      )
-    );
+    setAttendance(prev => ({
+      ...prev,
+      [userId]: newStatus
+    }));
   };
 
   const handleSave = async () => {
     try {
-      const attendanceCollection = collection(db, 'Attendance');
-      const date = new Date().toISOString().split('T')[0];
-      
-      await setDoc(doc(attendanceCollection, date), {
-        date,
-        records: attendance
-      });
+      const attendanceDoc = doc(db, 'Attendance', date);
+      await setDoc(attendanceDoc, { users: attendance }, { merge: true });
 
-      console.log('Présences enregistrées avec succès');
+      enqueueSnackbar('Présences/absences enregistrées avec succès', { variant: 'success' });
     } catch (error) {
-      console.error("Erreur lors de l'enregistrement des présences:", error);
+      console.error("Erreur lors de l'enregistrement des présences/absences:", error);
+      enqueueSnackbar("Erreur lors de l'enregistrement des présences/absences", { variant: 'error' });
     }
   };
 
@@ -100,49 +112,57 @@ export default function AbsenceView() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">Gestion des absences</Typography>
+        <Typography variant="h4">Gestion des présences/absences</Typography>
       </Stack>
       <Card sx={{ p: 3 }}>
+        <TextField
+          label="Date"
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          sx={{ mb: 2 }}
+          fullWidth
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
         <List>
-          {users.map(user => {
-            const userAttendance = attendance.find(a => a.id === user.id);
-            return (
-              <ListItem 
-                key={user.id} 
-                divider 
-                sx={{ 
-                  flexDirection: isMobile ? 'column' : 'row',
-                  alignItems: isMobile ? 'flex-start' : 'center',
-                  py: isMobile ? 2 : 1
-                }}
-              >
-                <ListItemText 
-                  primary={`${user.prenom} ${user.nom}`} 
-                  sx={{ mb: isMobile ? 1 : 0 }}
-                />
-                <Box sx={{ display: 'flex', width: isMobile ? '100%' : 'auto' }}>
-                  <AttendanceButton
-                    variant="contained"
-                    onClick={() => handleAttendanceChange(user.id, 'present')}
-                    isSelected={userAttendance?.status === 'present'}
-                    colorWhenSelected="#4caf50"
-                    fullWidth={isMobile}
-                  >
-                    Présent
-                  </AttendanceButton>
-                  <AttendanceButton
-                    variant="contained"
-                    onClick={() => handleAttendanceChange(user.id, 'absent')}
-                    isSelected={userAttendance?.status === 'absent'}
-                    colorWhenSelected="#f44336"
-                    fullWidth={isMobile}
-                  >
-                    Absent
-                  </AttendanceButton>
-                </Box>
-              </ListItem>
-            );
-          })}
+          {users.map(user => (
+            <ListItem 
+              key={user.id} 
+              divider 
+              sx={{ 
+                flexDirection: isMobile ? 'column' : 'row',
+                alignItems: isMobile ? 'flex-start' : 'center',
+                py: isMobile ? 2 : 1
+              }}
+            >
+              <ListItemText 
+                primary={`${user.prenom} ${user.nom}`} 
+                sx={{ mb: isMobile ? 1 : 0 }}
+              />
+              <Box sx={{ display: 'flex', width: isMobile ? '100%' : 'auto' }}>
+                <AttendanceButton
+                  variant="contained"
+                  onClick={() => handleAttendanceChange(user.id, 'present')}
+                  isSelected={attendance[user.id] === 'present'}
+                  colorWhenSelected="#4caf50"
+                  fullWidth={isMobile}
+                >
+                  Présent
+                </AttendanceButton>
+                <AttendanceButton
+                  variant="contained"
+                  onClick={() => handleAttendanceChange(user.id, 'absent')}
+                  isSelected={attendance[user.id] === 'absent'}
+                  colorWhenSelected="#f44336"
+                  fullWidth={isMobile}
+                >
+                  Absent
+                </AttendanceButton>
+              </Box>
+            </ListItem>
+          ))}
         </List>
         <Button
           variant="contained"
@@ -151,7 +171,7 @@ export default function AbsenceView() {
           sx={{ mt: 2 }}
           fullWidth={isMobile}
         >
-          Enregistrer la présence
+          Enregistrer les présences / absences
         </Button>
       </Card>
     </Container>
