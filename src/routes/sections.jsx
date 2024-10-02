@@ -11,6 +11,8 @@ export const UserPage = lazy(() => import('src/pages/user'));
 export const UserCreate = lazy(() => import('src/pages/user-create'));
 export const UserUpdate = lazy(() => import('src/pages/user-update'));
 export const AbsencePage = lazy(() => import('src/pages/absence'));
+export const AbsencesConsultationPage = lazy(() => import('src/pages/absences-consultation'));
+
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
@@ -70,6 +72,7 @@ export default function Router() {
         { path: 'user-create', element: <UserCreate /> },
         { path: 'user-update/:userId', element: <UserUpdate /> },
         { path: 'absence', element: <AbsencePage /> },
+        { path: 'absences-consultation', element: <AbsencesConsultationPage /> },
       ],
     },
     {

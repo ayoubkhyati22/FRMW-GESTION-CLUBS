@@ -18,9 +18,29 @@ const navConfig = [
     icon: icon('ic_user'),
   },
   {
-    title: 'gestion des absences',
+    title: 'Faire la présence',
     path: '/absence',
+    icon: icon('ic_disabled'),
+  },
+  {
+    title: 'gestion des absences',
+    path: '/absences-consultation',
+    icon: icon('ic_lock'),
+  },
+  {
+    title: 'gestion des paiements',
+    path: '/paiements',
+    icon: icon('ic_cart'),
+  },
+  {
+    title: 'gestion des clubs',
+    path: '/clubs',
     icon: icon('ic_user'),
+  },
+  {
+    title: 'parametrages',
+    path: '/parametrages',
+    icon: icon('ic_blog'),
   },
 
 
