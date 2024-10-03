@@ -95,15 +95,16 @@ const AttendanceCalendar = () => {
                   sx={{
                     width: '100%',
                     height: '100%',
-                    backgroundColor: getStatusColor(status),
+                    //backgroundColor: getStatusColor(status),
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
                     minHeight: '30px',
-                    borderRadius:'3px'
+                    borderRadius:'3px',
+                    color:'white'
                   }}
                 >
-                  {status === 'present' ? 'P' : status === 'absent' ? 'A' : ''}
+                  {status === 'present' ? '✅' : status === 'absent' ? '❌' : ''}
                 </Box>
               </TableCell>
             );
@@ -121,7 +122,7 @@ const AttendanceCalendar = () => {
         </Typography>
         <Box style={{ background: 'white' }}>
         <TextField
-        label="Chaoisissez le mois"
+        label="Choisissez le mois"
           type="month"
           value={format(currentMonth, 'yyyy-MM')}
           onChange={handleDateChange}
