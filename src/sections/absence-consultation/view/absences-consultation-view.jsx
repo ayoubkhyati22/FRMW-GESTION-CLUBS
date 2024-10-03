@@ -11,7 +11,8 @@ import {
   Typography,
   Container,
   Box,
-  Skeleton
+  Skeleton,
+  TextField
 } from '@mui/material';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from 'src/firebase';
@@ -24,41 +25,46 @@ const AttendanceCalendar = () => {
   const [loading, setLoading] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
+  const fetchData = async (date) => {
+    setLoading(true);
+    const start = startOfMonth(date);
+    const end = endOfMonth(date);
+
+    // Fetch users
+    const usersCollection = collection(db, 'Users');
+    const userSnapshot = await getDocs(usersCollection);
+    const userList = userSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    setUsers(userList);
+
+    // Fetch attendance data for the selected month
+    const attendanceCollection = collection(db, 'Attendance');
+    const q = query(
+      attendanceCollection,
+      where('__name__', '>=', format(start, 'yyyy-MM-dd')),
+      where('__name__', '<=', format(end, 'yyyy-MM-dd'))
+    );
+    const querySnapshot = await getDocs(q);
+    
+    const monthData = {};
+    querySnapshot.forEach((doc) => {
+      monthData[doc.id] = doc.data().users;
+    });
+
+    setAttendanceData(monthData);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const start = startOfMonth(currentMonth);
-      const end = endOfMonth(currentMonth);
-
-      // Fetch users (this could be moved to a higher-level component if users don't change often)
-      const usersCollection = collection(db, 'Users');
-      const userSnapshot = await getDocs(usersCollection);
-      const userList = userSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setUsers(userList);
-
-      // Fetch attendance data for the current month in a single query
-      const attendanceCollection = collection(db, 'Attendance');
-      const q = query(
-        attendanceCollection,
-        where('__name__', '>=', format(start, 'yyyy-MM-dd')),
-        where('__name__', '<=', format(end, 'yyyy-MM-dd'))
-      );
-      const querySnapshot = await getDocs(q);
-      
-      const monthData = {};
-      querySnapshot.forEach((doc) => {
-        monthData[doc.id] = doc.data().users;
-      });
-
-      setAttendanceData(monthData);
-      setLoading(false);
-    };
-
-    fetchData();
+    fetchData(currentMonth);
   }, [currentMonth]);
+
+  const handleDateChange = (event) => {
+    const newDate = new Date(event.target.value);
+    setCurrentMonth(newDate);
+  };
 
   const days = eachDayOfInterval({
     start: startOfMonth(currentMonth),
@@ -77,7 +83,7 @@ const AttendanceCalendar = () => {
     <TableBody>
       {users.map((user) => (
         <TableRow key={user.id}>
-          <TableCell component="th" scope="row">
+          <TableCell component="th" scope="row" style={{ position: 'sticky', left: 0, background: 'white', zIndex: 1 }}>
             {user.prenom} {user.nom}
           </TableCell>
           {days.map((day) => {
@@ -109,14 +115,31 @@ const AttendanceCalendar = () => {
 
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>
-        Calendrier des présences - {format(currentMonth, 'MMMM yyyy', { locale: fr })}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h4">
+          Calendrier des présences
+        </Typography>
+        <Box style={{ background: 'white' }}>
+        <TextField
+        label="Chaoisissez le mois"
+          type="month"
+          value={format(currentMonth, 'yyyy-MM')}
+          onChange={handleDateChange}
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+
+        </Box>
+      </Box>
+      <Typography variant="h5" gutterBottom>
+        {format(currentMonth, 'MMMM yyyy', { locale: fr })}
       </Typography>
-      <TableContainer component={Paper}>
-        <Table>
+      <TableContainer component={Paper} sx={{ maxHeight: '70vh', overflow: 'auto' }}>
+        <Table stickyHeader>
           <TableHead>
             <TableRow>
-              <TableCell>Utilisateur</TableCell>
+              <TableCell style={{ position: 'sticky', left: 0, zIndex: 2, background: 'white' }}>Athlète</TableCell>
               {days.map((day) => (
                 <TableCell 
                   key={day.toISOString()} 

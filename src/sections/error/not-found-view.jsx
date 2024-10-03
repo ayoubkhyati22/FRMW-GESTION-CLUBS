@@ -23,7 +23,12 @@ export default function NotFoundView() {
       }}
     >
       
-      <Logo />
+      {/* <Logo /> */}
+      <img
+        src="/assets/images/avatars/frmwLOGO.png"
+        alt=""
+        style={{ width: '220px', maxWidth: '100%' }}
+      />
     </Box>
   );
 
@@ -46,12 +51,11 @@ export default function NotFoundView() {
           }}
         >
           <Typography variant="h3" sx={{ mb: 3 }}>
-            Sorry, page not found!
+          Désolé, page non trouvée !
           </Typography>
 
           <Typography sx={{ color: 'text.secondary' }}>
-            Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve mistyped the URL? Be
-            sure to check your spelling.
+          Désolé, nous n’avons pas pu trouver la page que vous recherchez. Vous avez peut-être fait une erreur dans l’URL ?
           </Typography>
 
           <Box
@@ -65,7 +69,7 @@ export default function NotFoundView() {
           />
 
           <Button href="/" size="large" variant="contained" component={RouterLink}>
-            Go to Home
+            Retour au tableau de bord
           </Button>
         </Box>
       </Container>
