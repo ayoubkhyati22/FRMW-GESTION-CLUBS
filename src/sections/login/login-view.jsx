@@ -287,6 +287,7 @@ export default function LoginView() {
             mt:4
           }}
         >
+<<<<<<< HEAD
     <Box display="flex" justifyContent="center">
       <img
         src="/assets/images/avatars/frmwLOGO.png"
@@ -296,6 +297,9 @@ export default function LoginView() {
     </Box>
     <br />
           <Typography variant="h4">Authentification {isRegister ? '(inscription)' : ''}</Typography>
+=======
+          <Typography variant="h4">Authentification (inscription abdilah)</Typography>
+>>>>>>> 7f3a3c872b3e66597e1608a6896174af31808ca3
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             {isRegister ? (
