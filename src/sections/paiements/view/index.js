@@ -1,1 +1,1 @@
-export { default as Paiements } from './gestion-des-paiements';
+export { default as Paiements } from './PaymentManager';

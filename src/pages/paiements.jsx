@@ -1,7 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import {Paiements} from 'src/sections/paiements/view';
-
+import {Paiements} from 'src/sections/paiements/view/PaymentManager/';
 // ----------------------------------------------------------------------
 
 export default function PaiementPage() {
