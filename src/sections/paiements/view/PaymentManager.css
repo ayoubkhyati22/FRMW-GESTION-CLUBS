@@ -1,0 +1,27 @@
+.payment-manager-container {
+  max-width: 1000px;
+  margin: 100px auto;
+  padding: 50px;
+  background-color: #f9f9f9;
+  border-radius: 40px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.success-message {
+  color: green;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.content-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}

@@ -296,7 +296,6 @@ export default function LoginView() {
     </Box>
     <br />
           <Typography variant="h4">Authentification {isRegister ? '(inscription)' : ''}</Typography>
-
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             {isRegister ? (
               <>
