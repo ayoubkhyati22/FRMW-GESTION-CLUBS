@@ -8,7 +8,7 @@ export default function AppPage() {
   return (
     <>
       <Helmet>
-        <title> FRMWa | Tableau de bord </title>
+        <title> FRMW | Tableau de bord </title>
       </Helmet>
 
       <AppView />

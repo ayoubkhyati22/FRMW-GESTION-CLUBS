@@ -9,7 +9,7 @@ export default function AbsencePage() {
   return (
     <>
       <Helmet>
-        <title> FRMWa | Absences </title>
+        <title> FRMW | Absences </title>
       </Helmet>
 
       <SnackbarProvider maxSnack={3}>

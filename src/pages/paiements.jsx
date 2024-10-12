@@ -7,7 +7,7 @@ export default function PaiementPage() {
   return (
     <>
       <Helmet>
-        <title> FRMWa | Nouveau Utulisateur </title>
+        <title> FRMW | Nouveau Utulisateur </title>
       </Helmet>
 
       <Paiements />
