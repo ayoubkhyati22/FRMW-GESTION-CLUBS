@@ -19,13 +19,15 @@ const gradeColorMap = {
   'Black': '#000000'
 };
 
+
 export default function AppView() {
   const [userDetails, setUserDetails] = useState(null);
-  const [activeUserCount, setActiveUserCount] = useState(0);
-  const [inactiveUserCount, setInactiveUserCount] = useState(0);
-  const [clubCount, setClubCount] = useState(0);
+  const [activeUserCount, setActiveUserCount] = useState(null);
+  const [inactiveUserCount, setInactiveUserCount] = useState(null);
+  const [clubCount, setClubCount] = useState(null);
   const [attendanceData, setAttendanceData] = useState([]);
   const [gradeDistribution, setGradeDistribution] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
@@ -127,12 +129,20 @@ export default function AppView() {
   };
 
   useEffect(() => {
-    fetchUserData();
-    countActiveUsers();
-    countInactiveUsers();
-    countClubs();
-    fetchAttendanceData();
-    fetchGradeDistribution();
+    const fetchAllData = async () => {
+      setLoading(true);
+      await Promise.all([
+        fetchUserData(),
+        countActiveUsers(),
+        countInactiveUsers(),
+        countClubs(),
+        fetchAttendanceData(),
+        fetchGradeDistribution()
+      ]);
+      setLoading(false);
+    };
+
+    fetchAllData();
   }, []);
 
   const currentYear = new Date().getFullYear();
@@ -162,166 +172,174 @@ export default function AppView() {
     ],
   };
 
-  console.log("Chart data:", chartData);
-
   return (
-    <Container maxWidth="xl">
-      <Typography variant="h4" sx={{ mb: 5 }}>
-        Hi {userDetails ? (userDetails.prenom ? userDetails.prenom : 'chargement...') : 'chargement...'}, Welcome back 👋
-      </Typography>
+    <>
+    
+      <Container maxWidth="xl">
+        <Typography variant="h4" sx={{ mb: 5 }}>
+          Hi {userDetails ? (userDetails.prenom ? userDetails.prenom : 'chargement...') : 'chargement...'}, Welcome back 👋
+        </Typography>
 
-      <Grid container spacing={3}>
-      <Grid item xs={12} sm={6} md={3}>
-    <AppWidgetSummary
-      title="Clubs"
-      total={clubCount}
-      color="success"
-      icon={<img alt="icon" src="/assets/icons/glass/icons8-temple-100.png" />}
-      sx={{
-        position: 'relative',
-        overflow: 'hidden',
-        '::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          width: '100%',
-          height: '100%',
-          backgroundImage: 'url("/assets/icons/glass/icons8-temple-100.png")',
-          backgroundPosition: 'right',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'contain',
-          opacity: 0.1, // Further reduced opacity
-          zIndex: 0,
-        },
-        zIndex: 1,
-        background: 'linear-gradient(to bottom right, rgba(204, 85, 0, 0.1), rgba(255, 165, 0, 0.1))', // Softer gradient
-        borderRadius: '16px', // Optional: smooth border-radius for modern look
-        border: 3,
-        borderColor: 'Orange'
-      }}
-    />
-  </Grid>
-
-        <Grid item xs={12} sm={6} md={3}>
-          <AppWidgetSummary
-            title="Athlètes actif"
-            total={activeUserCount}
-            color="info"
-            icon={<img alt="icon" src="/assets/icons/glass/user-icon.png" />}
-            sx={{
-              position: 'relative',
-              overflow: 'hidden',
-              '::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                width: '100%',
-                height: '100%',
-                backgroundImage: 'url("/assets/icons/glass/icons8-coche-100.png")',
-                backgroundPosition: 'right',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain',
-                opacity: 0.2,
-                zIndex: 0,
-              },
-              zIndex: 1,
-              background: 'linear-gradient(to bottom right, rgba(0, 128, 0, 0.1), rgba(0, 255, 0, 0.1))', // Softer gradient
-              borderRadius: '16px', // Optional: smooth border-radius for modern look
-              border: 3,
-              borderColor: 'Green'
-            }}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3}>
-          <AppWidgetSummary
-            title="Athlètes partie"
-            total={inactiveUserCount}
-            color="warning"
-            icon={<img alt="icon" src="/assets/icons/glass/user-icon.png" />}
-            sx={{
-              position: 'relative',
-              overflow: 'hidden',
-              '::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                width: '100%',
-                height: '100%',
-                backgroundImage: 'url("/assets/icons/glass/icons8-effacer-100.png")',
-                backgroundPosition: 'right',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain',
-                opacity: 0.2,
-                zIndex: 0,
-              },
-              zIndex: 1,
-              background: 'linear-gradient(to bottom right, rgba(128, 0, 0, 0.1), rgba(255, 0, 0, 0.1))', // Softer gradient
-              borderRadius: '16px', // Optional: smooth border-radius for modern look
-              border: 3,
-              borderColor: 'Red'
-            }}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3}>
-          <AppWidgetSummary
-            title="Paiement pour ce mois"
-            total={'56'}
-            color="warning"
-            icon={<img alt="icon" src="/assets/icons/glass/icons8-sac-d'argent-euro-100.png" />}
-            sx={{
-              position: 'relative',
-              overflow: 'hidden',
-              '::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                width: '100%',
-                height: '100%',
-                backgroundImage: 'url("/assets/icons/glass/icons8-pourcentage-100.png")',
-                backgroundPosition: 'right',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain',
-                opacity: 0.2,
-                zIndex: 0,
-              },
-              zIndex: 1,
-              background: 'linear-gradient(to bottom right, rgba(0, 128, 128, 0.1), rgba(0, 255, 255, 0.1))', // Softer gradient
-              borderRadius: '16px', // Optional: smooth border-radius for modern look
-              border: 3,
-              borderColor: '#0047AB'
-            }}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={6} lg={8}>
-          {attendanceData.length > 0 ? (
-            <AppWebsiteVisits
-              title="Aperçu de la fréquentation"
-              subheader="Présence et absence par mois"
-              chart={chartData}
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6} md={3}>
+            <AppWidgetSummary
+              title="Clubs"
+              total={loading ? <span className="loader"></span> : clubCount}
+              color="success"
+              icon={<img alt="icon" src="/assets/icons/glass/icons8-temple-100.png" />}
+              sx={{
+                position: 'relative',
+                overflow: 'hidden',
+                '::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  width: '100%',
+                  height: '100%',
+                  backgroundImage: 'url("/assets/icons/glass/icons8-temple-100.png")',
+                  backgroundPosition: 'right',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: 'contain',
+                  opacity: 0.1,
+                  zIndex: 0,
+                },
+                zIndex: 1,
+                background: 'linear-gradient(to bottom right, rgba(204, 85, 0, 0.1), rgba(255, 165, 0, 0.1))',
+                borderRadius: '16px',
+                border: 3,
+                borderColor: 'Orange'
+              }}
             />
-          ) : (
-            <Typography>Loading attendance data...</Typography>
-          )}
-        </Grid>
+          </Grid>
 
+          <Grid item xs={12} sm={6} md={3}>
+            <AppWidgetSummary
+              title="Athlètes actif"
+              total={loading ? <span className="loader"></span> : activeUserCount}
+              color="info"
+              icon={<img alt="icon" src="/assets/icons/glass/user-icon.png" />}
+              sx={{
+                position: 'relative',
+                overflow: 'hidden',
+                '::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  width: '100%',
+                  height: '100%',
+                  backgroundImage: 'url("/assets/icons/glass/icons8-coche-100.png")',
+                  backgroundPosition: 'right',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: 'contain',
+                  opacity: 0.2,
+                  zIndex: 0,
+                },
+                zIndex: 1,
+                background: 'linear-gradient(to bottom right, rgba(0, 128, 0, 0.1), rgba(0, 255, 0, 0.1))',
+                borderRadius: '16px',
+                border: 3,
+                borderColor: 'Green'
+              }}
+            />
+          </Grid>
 
-        <Grid item xs={12} md={6} lg={4}>
-          <AppCurrentVisits
-            title="Distribution des grades"
-            chart={{
-              series: gradeDistribution,
-              colors: gradeDistribution.map(item => gradeColorMap[item.label] || '#000000'),
-            }}
-          />
+          <Grid item xs={12} sm={6} md={3}>
+            <AppWidgetSummary
+              title="Athlètes partie"
+              total={loading ? <span className="loader"></span> : inactiveUserCount}
+              color="warning"
+              icon={<img alt="icon" src="/assets/icons/glass/user-icon.png" />}
+              sx={{
+                position: 'relative',
+                overflow: 'hidden',
+                '::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  width: '100%',
+                  height: '100%',
+                  backgroundImage: 'url("/assets/icons/glass/icons8-effacer-100.png")',
+                  backgroundPosition: 'right',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: 'contain',
+                  opacity: 0.2,
+                  zIndex: 0,
+                },
+                zIndex: 1,
+                background: 'linear-gradient(to bottom right, rgba(128, 0, 0, 0.1), rgba(255, 0, 0, 0.1))',
+                borderRadius: '16px',
+                border: 3,
+                borderColor: 'Red'
+              }}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <AppWidgetSummary
+              title="Paiement pour ce mois"
+              total={loading ? <span className="loader"></span> : '56'}
+              color="warning"
+              icon={<img alt="icon" src="/assets/icons/glass/icons8-sac-d'argent-euro-100.png" />}
+              sx={{
+                position: 'relative',
+                overflow: 'hidden',
+                '::before': {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  width: '100%',
+                  height: '100%',
+                  backgroundImage: 'url("/assets/icons/glass/icons8-pourcentage-100.png")',
+                  backgroundPosition: 'right',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: 'contain',
+                  opacity: 0.2,
+                  zIndex: 0,
+                },
+                zIndex: 1,
+                background: 'linear-gradient(to bottom right, rgba(0, 128, 128, 0.1), rgba(0, 255, 255, 0.1))',
+                borderRadius: '16px',
+                border: 3,
+                borderColor: '#0047AB'
+              }}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={8}>
+            {loading ? (
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                <span className="loader"></span>
+              </div>
+            ) : (
+              <AppWebsiteVisits
+                title="Aperçu de la fréquentation"
+                subheader="Présence et absence par mois"
+                chart={chartData}
+              />
+            )}
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={4}>
+            {loading ? (
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                <span className="loader"></span>
+              </div>
+            ) : (
+              <AppCurrentVisits
+                title="Distribution des grades"
+                chart={{
+                  series: gradeDistribution,
+                  colors: gradeDistribution.map(item => gradeColorMap[item.label] || '#000000'),
+                }}
+              />
+            )}
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </>
   );
 }
