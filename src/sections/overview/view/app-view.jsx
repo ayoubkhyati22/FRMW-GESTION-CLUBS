@@ -171,33 +171,35 @@ export default function AppView() {
       </Typography>
 
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={3}>
-          <AppWidgetSummary
-            title="Clubs"
-            total={clubCount}
-            color="success"
-            icon={<img alt="icon" src="/assets/icons/glass/icons8-temple-100.png" />}
-            sx={{
-              position: 'relative',
-              overflow: 'hidden',
-              '::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                width: '100%',
-                height: '100%',
-                backgroundImage: 'url("/assets/icons/glass/icons8-temple-100.png")',
-                backgroundPosition: 'right',
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'contain',
-                opacity: 0.2,
-                zIndex: 0,
-              },
-              zIndex: 1,
-            }}
-          />
-        </Grid>
+      <Grid item xs={12} sm={6} md={3}>
+    <AppWidgetSummary
+      title="Clubs"
+      total={clubCount}
+      color="success"
+      icon={<img alt="icon" src="/assets/icons/glass/icons8-temple-100.png" />}
+      sx={{
+        position: 'relative',
+        overflow: 'hidden',
+        '::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          width: '100%',
+          height: '100%',
+          backgroundImage: 'url("/assets/icons/glass/icons8-temple-100.png")',
+          backgroundPosition: 'right',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'contain',
+          opacity: 0.1, // Further reduced opacity
+          zIndex: 0,
+        },
+        zIndex: 1,
+        background: 'linear-gradient(to bottom right, rgba(204, 85, 0, 0.1), rgba(255, 165, 0, 0.1))', // Softer gradient
+        borderRadius: '16px', // Optional: smooth border-radius for modern look
+      }}
+    />
+  </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
           <AppWidgetSummary
@@ -223,6 +225,8 @@ export default function AppView() {
                 zIndex: 0,
               },
               zIndex: 1,
+              background: 'linear-gradient(to bottom right, rgba(0, 128, 0, 0.1), rgba(0, 255, 0, 0.1))', // Softer gradient
+              borderRadius: '16px', // Optional: smooth border-radius for modern look
             }}
           />
         </Grid>
@@ -251,6 +255,8 @@ export default function AppView() {
                 zIndex: 0,
               },
               zIndex: 1,
+              background: 'linear-gradient(to bottom right, rgba(128, 0, 0, 0.1), rgba(255, 0, 0, 0.1))', // Softer gradient
+              borderRadius: '16px', // Optional: smooth border-radius for modern look
             }}
           />
         </Grid>
@@ -279,6 +285,8 @@ export default function AppView() {
                 zIndex: 0,
               },
               zIndex: 1,
+              background: 'linear-gradient(to bottom right, rgba(0, 128, 128, 0.1), rgba(0, 255, 255, 0.1))', // Softer gradient
+              borderRadius: '16px', // Optional: smooth border-radius for modern look
             }}
           />
         </Grid>
