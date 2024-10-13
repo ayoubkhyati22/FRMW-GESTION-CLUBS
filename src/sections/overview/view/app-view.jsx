@@ -197,6 +197,8 @@ export default function AppView() {
         zIndex: 1,
         background: 'linear-gradient(to bottom right, rgba(204, 85, 0, 0.1), rgba(255, 165, 0, 0.1))', // Softer gradient
         borderRadius: '16px', // Optional: smooth border-radius for modern look
+        border: 3,
+        borderColor: 'Orange'
       }}
     />
   </Grid>
@@ -227,6 +229,8 @@ export default function AppView() {
               zIndex: 1,
               background: 'linear-gradient(to bottom right, rgba(0, 128, 0, 0.1), rgba(0, 255, 0, 0.1))', // Softer gradient
               borderRadius: '16px', // Optional: smooth border-radius for modern look
+              border: 3,
+              borderColor: 'Green'
             }}
           />
         </Grid>
@@ -257,6 +261,8 @@ export default function AppView() {
               zIndex: 1,
               background: 'linear-gradient(to bottom right, rgba(128, 0, 0, 0.1), rgba(255, 0, 0, 0.1))', // Softer gradient
               borderRadius: '16px', // Optional: smooth border-radius for modern look
+              border: 3,
+              borderColor: 'Red'
             }}
           />
         </Grid>
@@ -266,7 +272,7 @@ export default function AppView() {
             title="Paiement pour ce mois"
             total={'56'}
             color="warning"
-            icon={<img alt="icon" src="/assets/icons/glass/icons8-sac-d'argent-100.png" />}
+            icon={<img alt="icon" src="/assets/icons/glass/icons8-sac-d'argent-euro-100.png" />}
             sx={{
               position: 'relative',
               overflow: 'hidden',
@@ -287,6 +293,8 @@ export default function AppView() {
               zIndex: 1,
               background: 'linear-gradient(to bottom right, rgba(0, 128, 128, 0.1), rgba(0, 255, 255, 0.1))', // Softer gradient
               borderRadius: '16px', // Optional: smooth border-radius for modern look
+              border: 3,
+              borderColor: '#0047AB'
             }}
           />
         </Grid>
