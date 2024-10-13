@@ -6,19 +6,33 @@ import AppCurrentVisits from '../app-current-visits';
 import { auth, db } from "../../../firebase";
 import { collection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 
+// Define a mapping of grade names to their actual colors
+const gradeColorMap = {
+  'White': '#FFFFFF',
+  'Yellow': '#FFFF00',
+  'Orange': '#FFA500',
+  'Gray': '#808080',
+  'Green': '#008000',
+  'Purple': '#800080',
+  'Red': '#FF0000',
+  'Brown': '#8B4513',
+  'Black': '#000000'
+};
+
 export default function AppView() {
   const [userDetails, setUserDetails] = useState(null);
   const [activeUserCount, setActiveUserCount] = useState(0);
   const [inactiveUserCount, setInactiveUserCount] = useState(0);
   const [clubCount, setClubCount] = useState(0);
   const [attendanceData, setAttendanceData] = useState([]);
+  const [gradeDistribution, setGradeDistribution] = useState([]);
 
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
       if (user) {
         const docRef = doc(db, "Users", user.uid);
         const docSnap = await getDoc(docRef);
-  
+
         if (docSnap.exists()) {
           const userData = docSnap.data();
           setUserDetails(userData);
@@ -53,7 +67,7 @@ export default function AppView() {
     try {
       const attendanceCollection = collection(db, "Attendance");
       const snapshot = await getDocs(attendanceCollection);
-      
+
       const monthlyData = new Array(12).fill(0).map(() => ({ present: 0, absent: 0 }));
 
       snapshot.forEach((doc) => {
@@ -85,12 +99,40 @@ export default function AppView() {
     }
   };
 
+  const fetchGradeDistribution = async () => {
+    try {
+      const usersCollection = collection(db, "Users");
+      const snapshot = await getDocs(usersCollection);
+      
+      const gradeCounts = {};
+      let totalUsers = 0;
+
+      snapshot.forEach((doc) => {
+        const userData = doc.data();
+        if (userData.grade) {
+          gradeCounts[userData.grade] = (gradeCounts[userData.grade] || 0) + 1;
+          totalUsers++;
+        }
+      });
+
+      const distribution = Object.entries(gradeCounts).map(([grade, count]) => ({
+        label: grade,
+        value: Math.round((count / totalUsers) * 100)
+      }));
+
+      setGradeDistribution(distribution);
+    } catch (error) {
+      console.error("Error fetching grade distribution:", error);
+    }
+  };
+
   useEffect(() => {
     fetchUserData();
     countActiveUsers();
     countInactiveUsers();
     countClubs();
     fetchAttendanceData();
+    fetchGradeDistribution();
   }, []);
 
   const currentYear = new Date().getFullYear();
@@ -129,47 +171,123 @@ export default function AppView() {
       </Typography>
 
       <Grid container spacing={3}>
-        <Grid xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <AppWidgetSummary
             title="Clubs"
             total={clubCount}
             color="success"
-            icon={<img alt="icon" src="/assets/icons/glass/icons8-temple-94.png" />}
+            icon={<img alt="icon" src="/assets/icons/glass/icons8-temple-100.png" />}
+            sx={{
+              position: 'relative',
+              overflow: 'hidden',
+              '::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                width: '100%',
+                height: '100%',
+                backgroundImage: 'url("/assets/icons/glass/icons8-temple-100.png")',
+                backgroundPosition: 'right',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                opacity: 0.2,
+                zIndex: 0,
+              },
+              zIndex: 1,
+            }}
           />
         </Grid>
 
-        <Grid xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <AppWidgetSummary
             title="Athlètes actif"
             total={activeUserCount}
             color="info"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
+            icon={<img alt="icon" src="/assets/icons/glass/user-icon.png" />}
+            sx={{
+              position: 'relative',
+              overflow: 'hidden',
+              '::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                width: '100%',
+                height: '100%',
+                backgroundImage: 'url("/assets/icons/glass/icons8-coche-100.png")',
+                backgroundPosition: 'right',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                opacity: 0.2,
+                zIndex: 0,
+              },
+              zIndex: 1,
+            }}
           />
         </Grid>
 
-        <Grid xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <AppWidgetSummary
             title="Athlètes partie"
             total={inactiveUserCount}
             color="warning"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
+            icon={<img alt="icon" src="/assets/icons/glass/user-icon.png" />}
+            sx={{
+              position: 'relative',
+              overflow: 'hidden',
+              '::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                width: '100%',
+                height: '100%',
+                backgroundImage: 'url("/assets/icons/glass/icons8-effacer-100.png")',
+                backgroundPosition: 'right',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                opacity: 0.2,
+                zIndex: 0,
+              },
+              zIndex: 1,
+            }}
           />
         </Grid>
 
-        {/* <Grid xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Bug Reports"
-            total={234}
-            color="error"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
+            title="Paiement pour ce mois"
+            total={'56'}
+            color="warning"
+            icon={<img alt="icon" src="/assets/icons/glass/icons8-sac-d'argent-100.png" />}
+            sx={{
+              position: 'relative',
+              overflow: 'hidden',
+              '::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                width: '100%',
+                height: '100%',
+                backgroundImage: 'url("/assets/icons/glass/icons8-pourcentage-100.png")',
+                backgroundPosition: 'right',
+                backgroundRepeat: 'no-repeat',
+                backgroundSize: 'contain',
+                opacity: 0.2,
+                zIndex: 0,
+              },
+              zIndex: 1,
+            }}
           />
-        </Grid> */}
+        </Grid>
 
-        <Grid xs={12} md={6} lg={8}>
+        <Grid item xs={12} md={6} lg={8}>
           {attendanceData.length > 0 ? (
             <AppWebsiteVisits
-              title="Attendance Overview"
-              subheader="Presence and Absence by Month"
+              title="Aperçu de la fréquentation"
+              subheader="Présence et absence par mois"
               chart={chartData}
             />
           ) : (
@@ -177,19 +295,16 @@ export default function AppView() {
           )}
         </Grid>
 
-        {/* <Grid xs={12} md={6} lg={4}>
+
+        <Grid item xs={12} md={6} lg={4}>
           <AppCurrentVisits
-            title="Current Visits"
+            title="Distribution des grades"
             chart={{
-              series: [
-                { label: 'America', value: 4344 },
-                { label: 'Asia', value: 5435 },
-                { label: 'Europe', value: 1443 },
-                { label: 'Africa', value: 4443 },
-              ],
+              series: gradeDistribution,
+              colors: gradeDistribution.map(item => gradeColorMap[item.label] || '#000000'),
             }}
           />
-        </Grid> */}
+        </Grid>
       </Grid>
     </Container>
   );
