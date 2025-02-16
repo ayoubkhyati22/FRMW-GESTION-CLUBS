@@ -9,6 +9,7 @@ import './loader.css';
 import Router from 'src/routes/sections';
 import ThemeProvider from 'src/theme';
 
+
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -21,3 +22,6 @@ export default function App() {
     </ThemeProvider>
   );
 }
+
+
+

@@ -28,11 +28,6 @@ const navConfig = [
     icon: icon('ic_lock'),
   },
   {
-    title: 'gestion des paiements',
-    path: '/paiements',
-    icon: icon('ic_cart'),
-  },
-  {
     title: 'gestion des clubs',
     path: '/clubs',
     icon: icon('ic_user'),

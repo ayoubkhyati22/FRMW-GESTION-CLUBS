@@ -153,7 +153,7 @@ export default function AppView() {
             subheader="(+43%) than last year"
             chart={{
               series: [
-                { label: 'Italy', value: 400 },
+                { label: 'lakrim', value: 400 },
                 { label: 'Japan', value: 430 },
                 { label: 'China', value: 448 },
                 { label: 'Canada', value: 470 },
