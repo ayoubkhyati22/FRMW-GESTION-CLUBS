@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "frmw-gestion-clubs"
-  }
+    "default": "club-management-ksct"
+  },
+  "targets": {},
+  "etags": {}
 }
