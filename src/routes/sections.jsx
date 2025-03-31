@@ -4,8 +4,7 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useState, useEffect } from 'react';
 
 import DashboardLayout from 'src/layouts/dashboard';
-import { Paiements } from 'src/sections/paiements/view';
-import PaymentManager from 'src/sections/paiements/view/PaymentManager';
+
 
 // Lazy imports des pages
 export const IndexPage = lazy(() => import('src/pages/app'));
@@ -71,8 +70,7 @@ export default function Router() {
       children: [
         { element: <IndexPage />, index: true },
         { path: 'user', element: <UserPage /> },
-        { path: 'user-create', element: <UserCreate /> },
-        { path: 'paiements', element: <PaymentManager /> },
+        { path: 'user-create', element: <UserCreate /> },      
         { path: 'user-update/:userId', element: <UserUpdate /> },
         { path: 'absence', element: <AbsencePage /> },
         { path: 'absences-consultation', element: <AbsencesConsultationPage /> },
